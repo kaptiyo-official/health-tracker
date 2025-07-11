@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Water Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="header-text"><h1>Water Tracker</h1></div>
+        <div class="nav-buttons">
+            <button onclick="location.href='{{ url_for('dashboard') }}'">Dashboard</button>
+            <button onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+            <button onclick="location.href='{{ url_for('food_tracker') }}'">Food Tracker</button>
+            <button onclick="location.href='{{ url_for('exercise') }}'">Exercise</button>
+            <button onclick="location.href='{{ url_for('meditation') }}'">Meditation</button>
+
+        </div>
+    </div>
+    <div class="water_tracker-container">
+        <h1>Hi, {{ user.username }}!</h1>
+        <div class="total-water">
+            <h2>Total Water Drank</h2>
+            <h3>{{ total_water_drank }} milliliters</h3>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="warning">
+                {% for category, message in messages %}
+                    <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <form method="POST" action="{{ url_for('water_tracker', user_id=user.id) }}">
+            <label for="water_amount">Enter water amount (ml):</label>
+            <input type="number" name="water_amount" min="1" required>
+            <button type="submit">Add Water</button>
+        </form>
+        <div class="water-entries">
+            <br>
+            <h2>Your Water Entries</h2>
+            <ul>
+                {% for entry in water_entries %}
+                    <li class="entry"><div class="entry-amount">{{ entry.amount }} ml</div> <div class="entry-timestamp">at {{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</div></li>
+                {% else %}
+                    <li>No water entries yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

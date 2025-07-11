@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="header-text"><h1>Health Tracker</h1></div>
+        <div class="nav-buttons">
+            <button onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+            <button onclick="location.href='{{ url_for('dashboard') }}'">Dashboard</button>
+            <button onclick="location.href='{{ url_for('water_tracker') }}'">Water Tracker</button>
+            <button onclick="location.href='{{ url_for('exercise') }}'">Exercise</button>
+            <button onclick="location.href='{{ url_for('meditation') }}'">Meditation</button>
+        </div>
+    </div>
+    <div class="food_tracker-container">
+        <form method="POST" action="{{ url_for('food_tracker') }}">
+            <div class="dropdown-container">
+                <input type="text" id="dropdownSearch" class="dropdown-search" placeholder="Search food item..." oninput="filterDropdown()">
+                <ul id="dropdownMenu" class="dropdown-menu">
+                    {% for food in food_items %}
+                        <li onclick="selectFood('{{ food.name }}')">{{ food.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <input type="hidden" name="food_item" id="selectedFoodItem" required>
+            <div class="nutrient-fields">
+                <label for="calories">Calories:</label>
+                <br>
+                <input type="number" name="calories" id="calories" placeholder="Calories" value="{{ selected_food.calories if selected_food else 0 }}" readonly>
+                <br>
+                <label for="carbohydrates">Carbs (g):</label>
+                <br>
+                <input type="number" step="0.1" name="carbohydrates" id="carbohydrates" placeholder="Carbs (g)" value="{{ selected_food.carbohydrates if selected_food else 0 }}" readonly>
+                <br>
+                <label for="proteins">Proteins (g):</label>
+                <br>
+                <input type="number" step="0.1" name="proteins" id="proteins" placeholder="Proteins (g)" value="{{ selected_food.proteins if selected_food else 0 }}" readonly>
+                <br>
+                <label for="fats">Fats (g):</label>
+                <br>
+
+                <input type="number" step="0.1" name="fats" id="fats" placeholder="Fats (g)" value="{{ selected_food.fats if selected_food else 0 }}" readonly>
+            </div>
+            <button type="submit" name="submit">Add Food</button>
+        </form>
+        <script>
+            const foodData = {{ food_items | tojson }};
+            document.getElementById('dropdownSearch').addEventListener('focus', () => {
+                document.getElementById('dropdownMenu').style.display = 'block';
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.matches('.dropdown-search, .dropdown-menu, .dropdown-menu *')) {
+                    document.getElementById('dropdownMenu').style.display = 'none';
+                }
+            });
+            function filterDropdown() {
+                const searchValue = document.getElementById('dropdownSearch').value.toLowerCase();
+                const dropdownItems = document.querySelectorAll('#dropdownMenu li');
+                dropdownItems.forEach(item => {
+                    if (item.textContent.toLowerCase().includes(searchValue)) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+            function selectFood(foodName) {
+                document.getElementById('selectedFoodItem').value = foodName;
+                updateNutritionalInfo(foodName);
+                document.getElementById('dropdownSearch').value = foodName;
+                document.getElementById('dropdownMenu').style.display = 'none';
+            }
+            function updateNutritionalInfo(selectedFoodName) {
+                const selectedFood = foodData.find(item => item.name === selectedFoodName);
+                if (selectedFood) {
+                    document.querySelector('input[name="calories"]').value = selectedFood.calories;
+                    document.querySelector('input[name="carbohydrates"]').value = selectedFood.carbohydrates;
+                    document.querySelector('input[name="proteins"]').value = selectedFood.proteins;
+                    document.querySelector('input[name="fats"]').value = selectedFood.fats;
+                }
+            }
+        </script>
+        <br>
+        <h2>Your Food Entries</h2>
+        <ul>
+            {% for entry in food_entries %}
+                <li class="food-entry">
+                    <div class="entry-item">{{ entry.food_item }}</div>
+                    <div class="entry-details">{{ entry.calories }} calories, {{ entry.carbohydrates }}g carbs, {{ entry.proteins }}g proteins, {{ entry.fats }}g fats</div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

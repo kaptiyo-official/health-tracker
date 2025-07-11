@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="">
+        <meta name="">
+        <title>Login</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+        <div class="login-container">
+            <h1>Login</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <form action="/login" method="POST">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p><br> Don't have an account? <a href="register"><button>Register Here!</button></a></p>
+            <br>
+            <br>
+            <p><b>OR</b></p>
+            <a href="google/callback"><button>Sign in with Google</button></a>
+        </div>
+</body>
+</html>

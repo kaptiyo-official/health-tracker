@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="header-text"><h1>Health Tracker</h1></div>
+        <div class="nav-buttons">
+            <button onclick="location.href='{{ url_for('food_tracker') }}'">Food Tracker</button>
+            <button onclick="location.href='{{ url_for('dashboard') }}'">Dashboard</button>
+            <button onclick="location.href='{{ url_for('water_tracker') }}'">Water Tracker</button>
+            <button onclick="location.href='{{ url_for('exercise') }}'">Exercise</button>
+            <button onclick="location.href='{{ url_for('meditation') }}'">Meditation</button>
+
+        </div>
+    </div>
+    <div class="dashboard-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <h1>Edit Profile</h1>
+        <form method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}" required>
+            <br><br>
+            
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" value="{{ user.age }}" required>
+            <br><br>
+            
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+                <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+            </select>
+            <br><br>
+            
+            <button type="submit">Update Profile</button>
+        </form>
+        <div class="logout">
+            <a href="/logout"><button>Logout</button></a>
+        </div>
+    </div>
+</body>
+</html>

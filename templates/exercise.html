@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="header-text"><h1>Exercise Tracker</h1></div>
+        <div class="nav-buttons">
+            <button onclick="location.href='{{ url_for('dashboard') }}'">Dashboard</button>
+            <button onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+            <button onclick="location.href='{{ url_for('food_tracker') }}'">Food Tracker</button>
+            <button onclick="location.href='{{ url_for('water_tracker') }}'">Water Tracker</button>
+            <button onclick="location.href='{{ url_for('meditation') }}'">Meditation</button>
+
+        </div>
+    </div>
+    <div class="exercise-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <h1>Exercise Tracker</h1>
+        
+        <div class="dropdown-container">
+            <input type="text" id="dropdownSearch" class="dropdown-search" placeholder="Search exercise..." oninput="filterDropdown()">
+            <ul id="dropdownMenu" class="dropdown-menu">
+                {% for exercise in preset_exercises %}
+                    <li onclick="selectExercise('{{ exercise.name }}')">{{ exercise.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <form method="POST">
+            <input type="hidden" name="exercise" id="selectedExercise" required>
+            <label for="amount">Enter Amount (e.g., minutes, reps):</label>
+            <input type="number" name="amount" id="amount" min="1" {% if exercise_done %}disabled{% endif %}>
+            <button type="submit" name="action" value="calculate">Calculate Calories Burned</button>
+            <br>
+            {% if selected_exercise %}
+                <button type="submit" name="action" value="done">Done</button>
+            {% endif %}
+        </form>
+        
+        {% if selected_exercise and not exercise_done %}
+            <div id="exerciseSection">
+                <h2>Exercise: {{ selected_exercise.name }}</h2>
+                <p>Description: {{ selected_exercise.description }}</p>
+                <p>Calories Burned: {{ calories_burned }} kcal</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        const exerciseData = {{ preset_exercises | tojson }};
+        
+        // Show dropdown when the search input is focused
+        document.getElementById('dropdownSearch').addEventListener('focus', () => {
+            document.getElementById('dropdownMenu').style.display = 'block';
+        });
+
+        // Hide dropdown when clicking outside of it
+        document.addEventListener('click', (e) => {
+            if (!e.target.matches('.dropdown-search, .dropdown-menu, .dropdown-menu *')) {
+                document.getElementById('dropdownMenu').style.display = 'none';
+            }
+        });
+
+        // Filter dropdown items based on search input
+        function filterDropdown() {
+            const searchValue = document.getElementById('dropdownSearch').value.toLowerCase();
+            const dropdownItems = document.querySelectorAll('#dropdownMenu li');
+            dropdownItems.forEach(item => {
+                if (item.textContent.toLowerCase().includes(searchValue)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Select an exercise and update hidden input
+        function selectExercise(exerciseName) {
+            document.getElementById('selectedExercise').value = exerciseName;
+            document.getElementById('dropdownSearch').value = exerciseName;
+            document.getElementById('dropdownMenu').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="header-text"><h1>Health Tracker</h1></div>
+        <div class="nav-buttons">
+            <button onclick="location.href='{{ url_for('food_tracker') }}'">Food Tracker</button>
+            <button onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+            <button onclick="location.href='{{ url_for('water_tracker') }}'">Water Tracker</button>
+            <button onclick="location.href='{{ url_for('exercise') }}'">Exercise</button>
+            <button onclick="location.href='{{ url_for('meditation') }}'">Meditation</button>
+
+        </div>
+    </div>
+    <div class="dashboard-container">
+        <h1>Hello, {{ user.username }}</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                        {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <br>
+        {% for key, total in daily_totals.items() %}
+            <h4>{{ key.capitalize() }} Progress</h4>
+            <div class="progress-bar">
+                <div class="filled" style="width: {{ progress[key]|round }}%;"></div>
+                <div class="progress-text">{{ total }} / {{ user.__dict__.get('daily_goal_' + key) }} ({{ progress[key]|round }}%)</div>
+            </div>
+            <br>
+        {% endfor %}
+    </div>
+
+    <audio id="audio" src="{{ url_for('static', filename='audio/audio.mp3') }}" loop></audio>
+
+    <script>
+        function playMeditation() {
+            const audio = document.getElementById('audio');
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+    </script>
+</body>
+</html>

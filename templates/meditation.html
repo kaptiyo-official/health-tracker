@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meditation - Breathe In & Breathe Out</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="header-text"><h1>Health Tracker</h1></div>
+        <div class="nav-buttons">
+            <button onclick="location.href='{{ url_for('food_tracker') }}'">Food Tracker</button>
+            <button onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+            <button onclick="location.href='{{ url_for('water_tracker') }}'">Water Tracker</button>
+            <button onclick="location.href='{{ url_for('exercise') }}'">Exercise</button>
+            <button onclick="location.href='{{ url_for('dashboard') }}'">Dashboard</button>
+
+        </div>
+    </div>
+    <div class="meditation-container">
+        <h1>Meditation Session</h1>
+        <div class="circle" id="circle"></div>
+        <br>
+        <h2 id="breatheText">Breathe In</h2>
+    </div>
+    <script>
+        let isBreathingIn = true;
+
+        function startBreathing() {
+            const circle = document.getElementById('circle');
+            const breatheText = document.getElementById('breatheText');
+
+            setInterval(() => {
+                if (isBreathingIn) {
+                    circle.classList.add('breathe-in');
+                    breatheText.textContent = 'Breathe In...';
+                } else {
+                    circle.classList.remove('breathe-in');
+                    breatheText.textContent = 'Breathe Out...';
+                }
+                isBreathingIn = !isBreathingIn;
+            }, 4000);
+        }
+
+        window.onload = startBreathing;
+    </script>
+</body>
+</html>
