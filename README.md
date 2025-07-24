@@ -25,8 +25,8 @@ It features:
 
 This was a **team project** built during a school hackathon, with 4 members:
 
-- 👨‍💻 **Backend:** Me (Kaptiyo) and a teammate — handled Python/Flask, databases, logic  
-- 🎨 **Frontend:** 2 teammates — handled UI/UX using HTML, CSS  
+- 👨‍💻 **Backend:** Me (Kaptiyo) and Vishruth — handled Python/Flask, databases, logic  
+- 🎨 **Frontend:** Charan and Arnav — handled UI/UX using HTML, CSS  
 - 🔁 We collaborated closely on embedded JavaScript and overall integration  
 - 📌 I served as the **team leader**
 
@@ -119,5 +119,13 @@ See the LICENSE file for more details.
 
 ---
 
+Team Members name:
+Kapish Goyal
+Adduri Vishruth Rao
+K. Charan Tej Reddy
+Arnav Vuppari
+
+This project was made in 8th grade!
+
 🙌 Thanks for checking this out!  
-Made with ❤️ by Kaptiyo & friends!
+Made with ❤️ by Kaptiyo & team!
